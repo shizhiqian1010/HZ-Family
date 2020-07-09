@@ -1,0 +1,13 @@
+spring:
+  redis:
+    password: 123456
+    host: 192.168.231.129
+    port: 6379
+  application:
+    name: shiroDemo
+#  resources:
+#    static-locations: classpath:static/
+server:
+  port: 10001
+  servlet:
+    context-path: /HZ-Family

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>混子大家庭后花园</title>
+</head>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script type="application/javascript">
+    // var appPrefix = "";
+    var appPrefix = "/HZ-Family";
+    function loadingIndex() {
+        $.ajax({
+            type: "GET",
+            url: appPrefix + "/getAllBlog",
+            data: null,
+            success: function (data) {
+                $('#InfoList').html(data);
+            }
+        })
+    }
+
+    function addBlog() {
+        var blog = new Object();
+        blog.logInfo = $("#logInfo").val();
+        $.ajax({
+            type: "POST",
+            url: appPrefix + "/addBlog",
+            enctype: "application/x-www-form-urlencoded",
+            data: blog,
+            success: function (data) {
+                if (data === "success") {
+                    loadingIndex();
+                }
+            }
+        })
+
+    }
+
+</script>
+<body onload="loadingIndex()">
+<h2>欢迎来到混子大家庭后花园</h2>
+
+
+<div>
+    <p id="InfoList">
+
+    </p>
+</div>
+
+<div>
+    <form>
+        <input type="text" id="logInfo" name="logInfo">
+        <input type="submit" value="提交" onclick="addBlog()"/>
+    </form>
+</div>
+
+</body>
+</html>
