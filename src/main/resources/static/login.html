@@ -18,31 +18,34 @@
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 <script type="application/javascript">
     var appPrefix = "/HZ-Family";
+
     // var appPrefix = "";
     function login() {
         var user = new Object();
         user.userName = $("#userName").val();
         user.passWord = $("#passWord").val();
         $.ajax({
-            type: "post",
             url: appPrefix + "/login",
+            type: "post",
             enctype: "application/x-www-form-urlencoded",
             data: user,
             success: function (data) {
-                console.log(data);
-                if (data == "success") {
-                    window.location.open = appPrefix + "/index.html"
-                }
+                // debugger;
+                alert(data)
+                // if (data == "success") {
+                //     window.location.href = "/HZ-Family/index.html";
+                    // window.location.href= appPrefix + "/index.html"
+                // }
             }
         })
     }
 </script>
 <body name="body">
 <div name="formEle">
-    <form>
-        用户名：<input type="text" id="userName"><br/>
-        密 码：<input type="password" id="passWord"><br/>
-        <input type="submit" value="提交" onclick="login()"/>
+    <form action="/HZ-Family/login" method="post">
+        用户名：<input type="text" name="userName"><br/>
+        密 码：<input type="password" name="passWord"><br/>
+        <input type="submit" value="提交"/><!--onclick="login()"-->
     </form>
 </div>
 </body>

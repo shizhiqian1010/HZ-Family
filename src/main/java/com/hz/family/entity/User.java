@@ -3,8 +3,9 @@ package com.hz.family.entity;
 import java.io.Serializable;
 import java.util.Set;
 
-public class User {
+public class User implements Serializable {
 
+    private final static Long serialVersionUID  = 5844966555589435546L;
 
     private String Id;
 

@@ -49,13 +49,10 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
-
-        Object userJson = redisTemplate.opsForValue().get(usernamePasswordToken.getUsername());
-
-        if (userJson == null) {
+        User user = (User)redisTemplate.opsForValue().get(usernamePasswordToken.getUsername());
+        if (user == null) {
             throw new UnknownAccountException();
         }
-        User user = JSONUtil.getObject(userJson.toString(), User.class);
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
                 usernamePasswordToken.getUsername(),
                 user.getPassWord(),
