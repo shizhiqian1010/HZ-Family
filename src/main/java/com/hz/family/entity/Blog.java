@@ -1,5 +1,7 @@
 package com.hz.family.entity;
 
+import sun.rmi.runtime.Log;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,10 +12,18 @@ public class Blog implements Serializable {
     private String id;
 
     private String userName;
-
+    /**
+     * 日记详情
+     */
     private String logInfo;
-
+    /**
+     * 发布时间
+     */
     private Date releaseTime;
+    /**
+     * 排序顺序（由 service 层赋值）
+     */
+    private Long score;
 
     public String getId() {
         return id;
@@ -47,5 +57,13 @@ public class Blog implements Serializable {
 
     public void setReleaseTime(Date releaseTime) {
         this.releaseTime = releaseTime;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
     }
 }

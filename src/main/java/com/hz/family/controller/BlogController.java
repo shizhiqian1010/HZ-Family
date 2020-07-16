@@ -3,7 +3,7 @@ package com.hz.family.controller;
 import com.alibaba.fastjson.JSON;
 import com.hz.family.entity.Blog;
 import com.hz.family.service.BlogService;
-import com.hz.family.util.ShiroUtil;
+import com.hz.family.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +32,9 @@ public class BlogController {
     @RequestMapping(value = "addBlog", method = RequestMethod.POST)
     @ResponseBody
     public String addBlog(@Param("blog") Blog blog) {
-        blog.setId(ShiroUtil.UUID());
+        blog.setId(UserUtil.UUID());
         blog.setReleaseTime(new Date());
-        blog.setUserName(ShiroUtil.getCurrentUserName());
+        blog.setUserName(UserUtil.getCurrentUserName());
         blogService.addBlog(blog);
         return "success";
     }

@@ -1,7 +1,7 @@
 package com.hz.family.config;
 
 import com.hz.family.entity.User;
-import com.hz.family.util.JSONUtil;
+import com.hz.family.util.UserUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -17,9 +17,6 @@ public class MyRealm extends AuthorizingRealm {
     @Autowired
     RedisTemplate redisTemplate;
 
-    private String permission = "User_Role_Permission_";
-    private String role = "User_Role_";
-
 //    public MyRealm(){
 //        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
 //        hashedCredentialsMatcher.setHashAlgorithmName("md5");
@@ -34,10 +31,7 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthorizationException("principals should not be null");
         }
         User user = (User) principals.getPrimaryPrincipal();
-
-
-        Object userJson = redisTemplate.opsForValue().get(user.getUserName());
-        User object = JSONUtil.getObject(userJson.toString(), User.class);
+        User object = (User)redisTemplate.opsForHash().get(UserUtil.USER_CACHE_KEYS, user.getUserName());
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.setRoles(object.getRoles());
@@ -45,11 +39,13 @@ public class MyRealm extends AuthorizingRealm {
         return simpleAuthorizationInfo;
     }
 
+
+
     // 用户登录认证
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
-        User user = (User)redisTemplate.opsForValue().get(usernamePasswordToken.getUsername());
+        User user = (User)redisTemplate.opsForHash().get(UserUtil.USER_CACHE_KEYS, usernamePasswordToken.getUsername());
         if (user == null) {
             throw new UnknownAccountException();
         }
