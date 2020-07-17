@@ -42,7 +42,7 @@ public class ShiroConfig {
         // 设置登陆成功后的跳转页面
         shiroFilterFactoryBean.setSuccessUrl("/index.html");
         // 设置未授权页面
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error.html");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/index.html");
         // 添加 拦截器链
         Map<String, String> filterChainMap = new LinkedHashMap<>();
         filterChainMap.put("/login.html", "anon");
