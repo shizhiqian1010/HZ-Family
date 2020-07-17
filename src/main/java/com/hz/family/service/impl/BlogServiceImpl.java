@@ -4,6 +4,7 @@ import com.hz.family.service.BlogService;
 import com.hz.family.entity.Blog;
 import com.hz.family.util.BlogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -36,7 +37,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Boolean update(Blog blog) {
-        Set<Blog> range = redisTemplate.opsForZSet().range(BlogUtil.BLOG_CACHE_PREFIX, blog.getScore() - 1, blog.getScore() + 1);
+        Set<Blog> range = redisTemplate.opsForZSet().range(BlogUtil.BLOG_CACHE_PREFIX, blog.getScore(), blog.getScore());
         if (!CollectionUtils.isEmpty(range)){
             Iterator<Blog> iterator = range.iterator();
             while (iterator.hasNext()){
