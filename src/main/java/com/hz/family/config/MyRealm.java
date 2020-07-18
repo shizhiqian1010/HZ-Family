@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 public class MyRealm extends AuthorizingRealm {
     @Autowired
@@ -31,7 +35,7 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthorizationException("principals should not be null");
         }
         User user = (User) principals.getPrimaryPrincipal();
-        User object = (User)redisTemplate.opsForHash().get(UserUtil.USER_CACHE_KEYS, user.getUserName());
+        User object = (User) redisTemplate.opsForHash().get(UserUtil.USER_CACHE_KEYS, user.getUserName());
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.setRoles(object.getRoles());
@@ -40,12 +44,11 @@ public class MyRealm extends AuthorizingRealm {
     }
 
 
-
     // 用户登录认证
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
-        User user = (User)redisTemplate.opsForHash().get(UserUtil.USER_CACHE_KEYS, usernamePasswordToken.getUsername());
+        User user = (User) redisTemplate.opsForHash().get(UserUtil.USER_CACHE_KEYS, usernamePasswordToken.getUsername());
         if (user == null) {
             throw new UnknownAccountException();
         }
@@ -57,5 +60,21 @@ public class MyRealm extends AuthorizingRealm {
         );
 //        authenticationInfo.setCredentialsSalt(ByteSource.Util.bytes("123456"));
         return authenticationInfo;
+    }
+
+    /**
+     * 初始化一个 admin 用户
+     */
+    @PostConstruct
+    private void initUser() {
+        User user = new User();
+        user.setId(UserUtil.UUID());
+        user.setUserName("admin");
+        user.setPassWord("123456");
+        Set<String> role = new HashSet<>();
+        role.add("管理员");
+        role.add("普通成员");
+        user.setRoles(role);
+        redisTemplate.opsForHash().put(UserUtil.USER_CACHE_KEYS, user.getUserName(), user);
     }
 }
