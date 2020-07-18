@@ -20,10 +20,6 @@ public class Blog implements Serializable {
      * 发布时间
      */
     private Date releaseTime;
-    /**
-     * 排序顺序（由 service 层赋值）
-     */
-    private Long score;
 
     public String getId() {
         return id;
@@ -59,11 +55,4 @@ public class Blog implements Serializable {
         this.releaseTime = releaseTime;
     }
 
-    public Long getScore() {
-        return score;
-    }
-
-    public void setScore(Long score) {
-        this.score = score;
-    }
 }

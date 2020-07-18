@@ -29,21 +29,20 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Boolean addBlog(Blog blog) {
-        blog.setScore(blog.getReleaseTime().getTime());
-        Boolean add = addBlog(blog, blog.getScore());
+        Boolean add = addBlog(blog, blog.getReleaseTime().getTime());
         return add;
     }
 
     @Override
     public Boolean update(Blog blog) {
-        Set<Blog> range = redisTemplate.opsForZSet().rangeByScore(BlogUtil.BLOG_CACHE_PREFIX, blog.getScore(), blog.getScore());
+        Set<Blog> range = redisTemplate.opsForZSet().rangeByScore(BlogUtil.BLOG_CACHE_PREFIX,blog.getReleaseTime().getTime(), blog.getReleaseTime().getTime());
         if (!CollectionUtils.isEmpty(range)) {
             Iterator<Blog> iterator = range.iterator();
             while (iterator.hasNext()) {
                 Blog next = iterator.next();
                 if (!StringUtils.isEmpty(blog.getId()) && next.getId().equals(blog.getId())) {
                     redisTemplate.opsForZSet().remove(BlogUtil.BLOG_CACHE_PREFIX, next);
-                    Boolean add = addBlog(blog, next.getScore());
+                    Boolean add = addBlog(blog, next.getReleaseTime().getTime());
                     if (add) {
                         return true;
                     }
